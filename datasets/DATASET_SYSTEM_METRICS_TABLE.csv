@@ -1,0 +1,25 @@
+Industry_Sector,Metric_Key,Subsystem_Metric_Name,Live_Value,Unit,Threshold_Warn,Threshold_Crit,Current_Status,Target_Server_Node
+IT Sector (DevOpsCorp),disk_usage_pct,CI/CD Docker Registry & Artifact Storage (/var/lib/docker),49.6,%,80.0,95.0,OK,ci-runner-cluster-01
+IT Sector (DevOpsCorp),worker_status,GitOps Terraform & Kubernetes Deployment Controller,1.0,"State (0=Locked, 1=Alive)",0.5,0.0,OK,gitops-controller-pool
+IT Sector (DevOpsCorp),queue_backlog_depth,GitHub Enterprise Code Merge & Webhook Queue,580.0,msgs,10000.0,50000.0,OK,kafka-devops-telemetry
+IT Sector (DevOpsCorp),ssl_cert_days,Enterprise Single Sign-On (SSO / Okta SAML) Ingress TLS,60.0,days,14.0,5.0,OK,sso.corp-it.internal
+IT Sector (DevOpsCorp),cpu_utilization,Kubernetes CI/CD Worker Node Pool CPU Load,28.4,%,75.0,90.0,OK,k8s-devops-workers
+IT Sector (DevOpsCorp),memory_utilization,Kubernetes CI/CD Worker Node Pool RAM Usage,42.1,%,80.0,90.0,OK,k8s-devops-workers
+E-Commerce (QuickCart),disk_usage_pct,QuickCart Invoicing Storage (/var/data/quickcart),51.4,%,80.0,95.0,OK,quickcart-invoice-01
+E-Commerce (QuickCart),worker_status,Rider Auto-Dispatch Pool Health,1.0,"State (0=Locked, 1=Alive)",0.5,0.0,OK,rider-dispatch-pool
+E-Commerce (QuickCart),queue_backlog_depth,Live Rider GPS Tracking Queue,620.0,msgs,10000.0,50000.0,OK,kafka-quickcart-edge
+E-Commerce (QuickCart),ssl_cert_days,Restaurant Partner Gateway TLS Validity,62.0,days,14.0,5.0,OK,kitchen.quickcart.com
+E-Commerce (QuickCart),cpu_utilization,E-Commerce Cluster CPU Load,31.2,%,75.0,90.0,OK,k8s-quickcart-nodes
+E-Commerce (QuickCart),memory_utilization,E-Commerce Cluster RAM Usage,46.8,%,80.0,90.0,OK,k8s-quickcart-nodes
+Healthcare (LifeCare ICU),disk_usage_pct,ICU Cardiac Waveform Storage (/var/data/icu),48.2,%,80.0,95.0,OK,icu-cardiac-srv-01
+Healthcare (LifeCare ICU),worker_status,Emergency Ambulance Dispatch Health,1.0,"State (0=Locked, 1=Alive)",0.5,0.0,OK,ems-dispatch-srv
+Healthcare (LifeCare ICU),queue_backlog_depth,Patient Bedside Vital Signs Queue,410.0,msgs,10000.0,50000.0,OK,kafka-medical-vitals
+Healthcare (LifeCare ICU),ssl_cert_days,Telemedicine Video Gateway TLS Validity,75.0,days,14.0,5.0,OK,telemed.lifecare.org
+Healthcare (LifeCare ICU),cpu_utilization,Hospital Core Telemetry CPU Load,24.5,%,75.0,90.0,OK,k8s-med-nodes
+Healthcare (LifeCare ICU),memory_utilization,Hospital Core Telemetry RAM Usage,39.8,%,80.0,90.0,OK,k8s-med-nodes
+Fintech (GlobalPay),disk_usage_pct,Postgres WAL Storage (/var/lib/postgresql/pg_wal),54.2,%,80.0,95.0,OK,prod-db-primary-01
+Fintech (GlobalPay),worker_status,Fintech Payment Worker Pool (py-recon-daemon),1.0,"State (0=Locked, 1=Alive)",0.5,0.0,OK,fintech-recon-01
+Fintech (GlobalPay),queue_backlog_depth,Fraud Evaluation Kafka Backlog,850.0,msgs,10000.0,50000.0,OK,kafka-cluster-frauddetection
+Fintech (GlobalPay),ssl_cert_days,Production Ingress Edge TLS Validity,58.0,days,14.0,5.0,OK,api.globalpay.com
+Fintech (GlobalPay),cpu_utilization,Cluster CPU Load Average,28.5,%,75.0,90.0,OK,k8s-node-pool-1
+Fintech (GlobalPay),memory_utilization,Cluster RAM Usage,44.2,%,80.0,90.0,OK,k8s-node-pool-1

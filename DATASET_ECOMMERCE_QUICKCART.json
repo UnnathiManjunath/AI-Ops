@@ -1,0 +1,279 @@
+{
+  "metadata": {
+    "dataset_name": "QuickCart Global E-Commerce & Food Delivery Cloud",
+    "domain": "E-Commerce, Food Delivery & Real-Time Logistics",
+    "system_id": "quickcart-prod-cluster-01",
+    "version": "3.1.0-ECOMMERCE",
+    "team": "Idea Ignitors (XH-23) - Cynefian Hackathon"
+  },
+  "system_metrics": [
+    {
+      "metric_key": "disk_usage_pct",
+      "name": "QuickCart Invoicing Storage (/var/data/quickcart)",
+      "value": 51.4,
+      "unit": "%",
+      "threshold_warn": 80.0,
+      "threshold_crit": 95.0,
+      "status": "OK",
+      "server_node": "quickcart-invoice-01"
+    },
+    {
+      "metric_key": "worker_status",
+      "name": "Rider Auto-Dispatch Pool Health",
+      "value": 1.0,
+      "unit": "State (0=Locked, 1=Alive)",
+      "threshold_warn": 0.5,
+      "threshold_crit": 0.0,
+      "status": "OK",
+      "server_node": "rider-dispatch-pool"
+    },
+    {
+      "metric_key": "queue_backlog_depth",
+      "name": "Live Rider GPS Tracking Queue",
+      "value": 620.0,
+      "unit": "msgs",
+      "threshold_warn": 10000.0,
+      "threshold_crit": 50000.0,
+      "status": "OK",
+      "server_node": "kafka-quickcart-edge"
+    },
+    {
+      "metric_key": "ssl_cert_days",
+      "name": "Restaurant Partner Gateway TLS Validity",
+      "value": 62.0,
+      "unit": "days",
+      "threshold_warn": 14.0,
+      "threshold_crit": 5.0,
+      "status": "OK",
+      "server_node": "kitchen.quickcart.com"
+    },
+    {
+      "metric_key": "cpu_utilization",
+      "name": "E-Commerce Cluster CPU Load",
+      "value": 31.2,
+      "unit": "%",
+      "threshold_warn": 75.0,
+      "threshold_crit": 90.0,
+      "status": "OK",
+      "server_node": "k8s-quickcart-nodes"
+    },
+    {
+      "metric_key": "memory_utilization",
+      "name": "E-Commerce Cluster RAM Usage",
+      "value": 46.8,
+      "unit": "%",
+      "threshold_warn": 80.0,
+      "threshold_crit": 90.0,
+      "status": "OK",
+      "server_node": "k8s-quickcart-nodes"
+    }
+  ],
+  "safety_policies": [
+    {
+      "policy_key": "kill_switch_active",
+      "policy_name": "Emergency Master Kill Switch",
+      "value": "false",
+      "description": "Instant freeze for all QuickCart automation threads across cluster."
+    },
+    {
+      "policy_key": "rate_limit_per_minute",
+      "policy_name": "Action Rate Limiter",
+      "value": "5",
+      "description": "Maximum 5 automated remediations per minute to prevent runaway loops."
+    },
+    {
+      "policy_key": "max_scaling_instances",
+      "policy_name": "Max Delivery Consumer Pods",
+      "value": "10",
+      "description": "Strict cloud compute ceiling to prevent unexpected cloud billing spikes ($3,800/hr risk)."
+    },
+    {
+      "policy_key": "disk_safety_floor_gb",
+      "policy_name": "Invoice Safety Floor",
+      "value": "5.0",
+      "description": "Minimum free disk space buffer below which high-risk escalation is mandated."
+    },
+    {
+      "policy_key": "tier1_auto_enabled",
+      "policy_name": "Tier 1 Safe Auto-Remediation",
+      "value": "true",
+      "description": "Autonomous execution of non-destructive fixes without rider disruption."
+    },
+    {
+      "policy_key": "tier3_requires_approval",
+      "policy_name": "Tier 3 Human Authorization Gate",
+      "value": "true",
+      "description": "Mandatory human sign-off before modifying active orders or payment channels."
+    }
+  ],
+  "runbooks": [
+    {
+      "runbook_id": "QC-DISK-CRIT",
+      "title": "QuickCart Critical: Customer Order Invoicing & Tax Ledger Partition Full (98.7%)",
+      "category": "E-Commerce Storage",
+      "target_subsystem": "/var/data/quickcart/invoices",
+      "trigger_condition": "Invoice partition disk usage > 98% (Only 450MB remaining!)",
+      "safe_action_tier": "Tier 3 (High Risk - Human Approval Required)",
+      "blast_radius": "CRITICAL: Complete checkout checkout block + database write lock.",
+      "judgment_rules": "IF invoice partition is at 98.7%, customer orders cannot be confirmed. DO NOT delete invoices; snapshot older tax records to S3 glacier storage with human sign-off.",
+      "remediation_command": "aws s3 sync /var/data/quickcart/invoices/2025/ s3://quickcart-tax-cold/ && find /var/data/quickcart/invoices/2025/ -type f -delete",
+      "rollback_command": "aws s3 sync s3://quickcart-tax-cold/ /var/data/quickcart/invoices/2025/ || true",
+      "verification_check": "df -h /var/data/quickcart/invoices | awk 'NR==2 {gsub(\"%\", \"\"); if ($5 < 80) print \"PASS\"; else print \"FAIL\"}'",
+      "documentation": "Protects tax invoices and fiscal compliance while restoring checkout operations."
+    },
+    {
+      "runbook_id": "QC-DISK-WARN",
+      "title": "QuickCart Warning: Delivery Rider GPS Location Telemetry Log Overflow (89.2%)",
+      "category": "E-Commerce Storage",
+      "target_subsystem": "/var/log/rider_gps",
+      "trigger_condition": "GPS location log usage > 85%",
+      "safe_action_tier": "Tier 1 (Low Risk - Safe Auto)",
+      "blast_radius": "LOW: Rider telemetry logs only. Zero customer order disruption.",
+      "judgment_rules": "IF GPS log partition exceeds 85%, compress and archive raw breadcrumbs older than 48h to reclaim 34 GB. Safe for autonomous execution.",
+      "remediation_command": "find /var/log/rider_gps/ -name '*.trace' -mtime +2 -exec gzip {} \\; && journalctl --vacuum-time=1d",
+      "rollback_command": "find /var/log/rider_gps/ -name '*.trace.gz' -exec gunzip {} \\;",
+      "verification_check": "df -h /var/log/rider_gps | awk 'NR==2 {gsub(\"%\", \"\"); if ($5 < 75) print \"PASS\"; else print \"FAIL\"}'",
+      "documentation": "Compresses old delivery rider GPS traces to reclaim 34 GB safely."
+    },
+    {
+      "runbook_id": "QC-DISK-UNC",
+      "title": "QuickCart Uncritical: Restaurant Menu Image Preview Cache Hygiene (51.4%)",
+      "category": "E-Commerce Hygiene",
+      "target_subsystem": "/var/cache/menu_renders",
+      "trigger_condition": "Off-peak schedule OR cache between 45% and 60%",
+      "safe_action_tier": "Tier 0 / Tier 1 (Uncritical - Silent Safe Auto)",
+      "blast_radius": "ZERO (0%): Purely temporary restaurant menu preview images.",
+      "judgment_rules": "IF disk utilization is non-critical (51.4%), prune stale restaurant dish thumbnails silently without waking engineers.",
+      "remediation_command": "find /var/cache/menu_renders -type f -mtime +14 -delete",
+      "rollback_command": "touch /var/cache/menu_renders/.maintenance_complete",
+      "verification_check": "df -h /var/cache/menu_renders | awk 'NR==2 {print \"PASS_DISK_HEALTHY\"}'",
+      "documentation": "Routine off-peak menu image thumbnail garbage collection."
+    },
+    {
+      "runbook_id": "QC-WORKER-CRIT",
+      "title": "QuickCart Critical: Live Rider Auto-Dispatch Engine Threadlock (3,420 Orders Waiting!)",
+      "category": "E-Commerce Logistics",
+      "target_subsystem": "rider-dispatch-daemon",
+      "trigger_condition": "Dispatch daemon locked and pending orders > 3,000",
+      "safe_action_tier": "Tier 3 (High Risk - Human Approval Required)",
+      "blast_radius": "HIGH: 3,420 hungry customer deliveries + rider dispatch queue.",
+      "judgment_rules": "IF dispatch daemon is deadlocked with 3,420 active orders, DO NOT kill worker process (prevents duplicate rider dispatch and order loss). Human approval required to pause order ingress before restart.",
+      "remediation_command": "python3 /opt/quickcart/scripts/drain_active_rider_locks.py && systemctl restart rider-dispatch-daemon.service",
+      "rollback_command": "systemctl restart rider-dispatch-daemon.service",
+      "verification_check": "systemctl is-active rider-dispatch-daemon.service",
+      "documentation": "Safeguards live food delivery rider assignment against double allocation."
+    },
+    {
+      "runbook_id": "QC-WORKER-WARN",
+      "title": "QuickCart Warning: Promotional WhatsApp / SMS Notification Worker Stalled (280s)",
+      "category": "E-Commerce Notifications",
+      "target_subsystem": "promo-sender-03",
+      "trigger_condition": "Worker heartbeat missed for > 250s (Twilio socket wait)",
+      "safe_action_tier": "Tier 1 (Low Risk - Safe Auto)",
+      "blast_radius": "LOW: Marketing notification queue only. Zero customer order or payment risk.",
+      "judgment_rules": "IF worker is hung in external Twilio gateway timeout, perform graceful SIGTERM restart with automatic notification retry.",
+      "remediation_command": "systemctl restart celery-worker@promo-sender-03.service",
+      "rollback_command": "systemctl restart celery-worker@promo-sender-03-fallback.service",
+      "verification_check": "systemctl is-active celery-worker@promo-sender-03.service",
+      "documentation": "Restores marketing notification worker safely with message requeue."
+    },
+    {
+      "runbook_id": "QC-WORKER-UNC",
+      "title": "QuickCart Uncritical: Customer Loyalty Points Calculator Soft Recycle (25,000 Users)",
+      "category": "E-Commerce Compute",
+      "target_subsystem": "loyalty-calc-01",
+      "trigger_condition": "Worker processed > 20,000 users (Worker Healthy)",
+      "safe_action_tier": "Tier 0 / Tier 1 (Uncritical - Silent Safe Auto)",
+      "blast_radius": "ZERO (0%): Soft reload occurs between batch calculations.",
+      "judgment_rules": "IF loyalty worker is healthy but has minor heap fragmentation, trigger graceful reload during off-peak lull.",
+      "remediation_command": "systemctl reload-or-restart celery-worker@loyalty-calc-01.service",
+      "rollback_command": "systemctl status celery-worker@loyalty-calc-01.service",
+      "verification_check": "systemctl is-active celery-worker@loyalty-calc-01.service",
+      "documentation": "Defragments Python heap memory on loyalty points batch workers."
+    },
+    {
+      "runbook_id": "QC-QUEUE-CRIT",
+      "title": "QuickCart Critical: Live Rider Location Kafka Poison Pill Crash (184,000 msgs - 88.2% Err)",
+      "category": "E-Commerce Streaming",
+      "target_subsystem": "riders.gps.stream",
+      "trigger_condition": "Queue backlog > 100,000 and consumer error rate > 80%",
+      "safe_action_tier": "Tier 3 (High Risk - Human Approval Required)",
+      "blast_radius": "HIGH: Delivery ETA accuracy and $3,800/hr cloud compute burn.",
+      "judgment_rules": "IF consumer error rate is > 80% (malformed geofence coordinate crashing pods), DO NOT scale pods (prevents $3,800/hr compute burn); divert bad offset to DLQ with human sign-off.",
+      "remediation_command": "kafka-consumer-groups --bootstrap-server kafka:9092 --group rider-gps --topic riders.gps.stream --reset-offsets --to-offset 891043 --execute",
+      "rollback_command": "kafka-consumer-groups --bootstrap-server kafka:9092 --group rider-gps --topic riders.gps.stream --reset-offsets --to-offset 891042 --execute",
+      "verification_check": "echo PASS_DLQ_ROUTED",
+      "documentation": "Quarantines bad geofence payloads to unblock rider location tracking."
+    },
+    {
+      "runbook_id": "QC-QUEUE-WARN",
+      "title": "QuickCart Warning: Midnight Biryani Flash Sale Checkout Surge (32,400 msgs)",
+      "category": "E-Commerce Scaling",
+      "target_subsystem": "orders.checkout.live",
+      "trigger_condition": "Queue backlog > 20,000 and error rate < 0.1%",
+      "safe_action_tier": "Tier 2 (Guarded Auto - Within Policy Limits)",
+      "blast_radius": "MEDIUM: Kubernetes consumer deployment. Capped at max 10 pods.",
+      "judgment_rules": "IF error rate < 0.1% (clean flash sale traffic), autoscale consumers from 3 to 7 pods within policy limit 10.",
+      "remediation_command": "kubectl scale deployment/order-consumer --replicas=7 --namespace=orders",
+      "rollback_command": "kubectl scale deployment/order-consumer --replicas=3 --namespace=orders",
+      "verification_check": "kubectl get deployment/order-consumer -o jsonpath='{.status.readyReplicas}'",
+      "documentation": "Autoscales checkout consumers to drain promotion rush smoothly."
+    },
+    {
+      "runbook_id": "QC-QUEUE-UNC",
+      "title": "QuickCart Uncritical: Restaurant Review Notification Queue Ripple (620 msgs)",
+      "category": "E-Commerce Queues",
+      "target_subsystem": "restaurant.reviews",
+      "trigger_condition": "Backlog between 400 and 1,000 messages (Minor Transient Ripple)",
+      "safe_action_tier": "Tier 1 (Uncritical - Silent Safe Auto)",
+      "blast_radius": "LOW (< 5%): Spins up 1 standby consumer container.",
+      "judgment_rules": "IF backlog has minor morning ripple (620 msgs), activate 1 standby pod to maintain sub-150ms latency.",
+      "remediation_command": "kubectl scale deployment/order-consumer --replicas=4 --namespace=orders",
+      "rollback_command": "kubectl scale deployment/order-consumer --replicas=3 --namespace=orders",
+      "verification_check": "kubectl get deployment/order-consumer -o jsonpath='{.status.readyReplicas}'",
+      "documentation": "Smooths out transient review notifications silently."
+    },
+    {
+      "runbook_id": "QC-SSL-CRIT",
+      "title": "QuickCart Critical: Restaurant Kitchen Gateway Root CA Revocation (4 Hours Left!)",
+      "category": "E-Commerce Security",
+      "target_subsystem": "kitchen.quickcart.com",
+      "trigger_condition": "Certificate validity < 12 hours and CA revoked upstream",
+      "safe_action_tier": "Tier 3 (High Risk - Human Approval Required)",
+      "blast_radius": "CRITICAL: Restaurant order transmission and live kitchen displays.",
+      "judgment_rules": "IF intermediate CA is revoked upstream, automated ACME renewal cannot succeed. Escalate immediately to Security Ops Lead for manual re-pinning.",
+      "remediation_command": "update-ca-certificates --fresh && nginx -s reload",
+      "rollback_command": "cp /etc/ssl/backup/last_known_good.crt /etc/ssl/certs/ && nginx -s reload",
+      "verification_check": "openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/kitchen.quickcart.com.crt",
+      "documentation": "Prevents kitchen order tablets from disconnecting due to untrusted certificates."
+    },
+    {
+      "runbook_id": "QC-SSL-WARN",
+      "title": "QuickCart Warning: Mobile App Public Gateway TLS Expiring (3.8 Days)",
+      "category": "E-Commerce Ingress",
+      "target_subsystem": "api.quickcart.com",
+      "trigger_condition": "Certificate validity <= 5 days (ACME DNS valid)",
+      "safe_action_tier": "Tier 1 (Low Risk - Safe Auto)",
+      "blast_radius": "LOW: Public Ingress Gateway. Zero dropped socket connections.",
+      "judgment_rules": "IF certificate is within 5 days of expiry and DNS records valid, trigger automated certbot renewal and seamless nginx reload.",
+      "remediation_command": "certbot renew --cert-name api.quickcart.com --quiet && nginx -s reload",
+      "rollback_command": "cp /etc/ssl/backup/last_known_good.crt /etc/ssl/certs/ && nginx -s reload",
+      "verification_check": "openssl x509 -checkend 604800 -noout -in /etc/ssl/certs/api.quickcart.com.crt",
+      "documentation": "Automated seamless TLS rotation for public mobile app ingress."
+    },
+    {
+      "runbook_id": "QC-SSL-UNC",
+      "title": "QuickCart Uncritical: Warehouse Logistics Mutual TLS Health Audit (62.0 Days)",
+      "category": "E-Commerce Auditing",
+      "target_subsystem": "warehouse-auth.internal",
+      "trigger_condition": "Scheduled audit OR certificate validity at 62 days remaining",
+      "safe_action_tier": "Tier 0 / Tier 1 (Uncritical - Preventive Health Audit)",
+      "blast_radius": "ZERO (0%): Read-only cryptographic handshake validation probe.",
+      "judgment_rules": "IF certificate validity is healthy (62 days remaining), execute routine cryptographic trust check. No human action required.",
+      "remediation_command": "openssl s_client -servername warehouse-auth.internal -connect 127.0.0.1:443 </dev/null 2>/dev/null | openssl x509 -noout -dates && echo 'AUDIT_VERIFIED_VALID'",
+      "rollback_command": "echo 'AUDIT_NOOP'",
+      "verification_check": "openssl x509 -checkend 2592000 -noout -in /etc/ssl/certs/warehouse-auth.internal.crt",
+      "documentation": "Proactive cryptographic validity audit on warehouse logistics mTLS."
+    }
+  ]
+}
