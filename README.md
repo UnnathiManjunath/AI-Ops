@@ -8,7 +8,7 @@
 **Domain:** AI Ops  
 
 ### 🔗 Project Links & Verification
-* 🌐 **Live Project URL Link:** [https://6bc6226a9d4fd0.lhr.life](https://6bc6226a9d4fd0.lhr.life) *(Local Dashboard: `http://127.0.0.1:5050`)*
+* 🌐 **Live Project URL Link:** [https://8e1f49a616010f.lhr.life](https://8e1f49a616010f.lhr.life) *(Local Dashboard: `http://127.0.0.1:5050`)*
 * 🐙 **GitHub Public Repository:** [https://github.com/UnnathiManjunath/AI-Ops](https://github.com/UnnathiManjunath/AI-Ops)
 * 📘 **Complete 8-Page Documentation PDF:** [Download SafeOps_AI_Complete_Documentation.pdf](https://github.com/UnnathiManjunath/AI-Ops/raw/main/SafeOps_AI_Complete_Documentation.pdf)
 * 📄 **Download Testcase PDF (16/16 PASS):** [Download Testcase.pdf](https://github.com/UnnathiManjunath/AI-Ops/raw/main/Testcase.pdf)
