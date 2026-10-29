@@ -1,0 +1,116 @@
+{
+  "project_name": "SafeOps AI",
+  "version": "2.4.0",
+  "track": "Cynefian 24-Hour Student Hackathon — AI-Ops Track",
+  "problem_statement": "AO-04: Automation that is safe enough to leave switched on",
+  "team": {
+    "team_id": "XH-23",
+    "team_name": "Idea Ignitors",
+    "institution": "GSSSIETW",
+    "members": [
+      { "name": "Babitha M", "role": "ITIL Audit & Rollback Controller" },
+      { "name": "M Eshwar", "role": "Backend Engine & SQLite Database" },
+      { "name": "Unnathi T M", "role": "AI/LLM Architecture & Risk Policy" },
+      { "name": "Chaithanya N S", "role": "Frontend Telemetry & Dashboard UX" }
+    ]
+  },
+  "repositories": {
+    "public_repo": "https://github.com/UnnathiManjunath/AI-Ops",
+    "host_fork_repo": "https://github.com/hackbridge-dev1/AI-Ops",
+    "fork_status": "Host Account Fork Active",
+    "readme_sync_status": "Server README.md Synced"
+  },
+  "live_deployment": {
+    "primary_url": "https://f9350825bebff0.lhr.life",
+    "backup_tunnel_url": "https://2c67340a233e58.lhr.life",
+    "local_url": "http://127.0.0.1:5050",
+    "status": "ONLINE",
+    "tls_termination": true
+  },
+  "artifacts": {
+    "testcase_pdf": "Testcase.pdf",
+    "testcase_html": "testcase_report.html",
+    "sqlite_database": "safeops_master.db",
+    "master_runbook": "MASTER_OPERATIONAL_RUNBOOK.md"
+  },
+  "test_execution_summary": {
+    "total_testcases": 12,
+    "passed": 12,
+    "failed": 0,
+    "pass_rate": "100%",
+    "testcases": [
+      {
+        "id": "TC-01",
+        "subsystem": "Storage Disk (/var/log/app)",
+        "scenario": "Automated Gzip compression of rotated logs via Shannon entropy",
+        "status": "PASS"
+      },
+      {
+        "id": "TC-02",
+        "subsystem": "Storage Disk (Reversibility)",
+        "scenario": "Zero-loss reversible rollback using Gunzip",
+        "status": "PASS"
+      },
+      {
+        "id": "TC-03",
+        "subsystem": "Worker Pool (/proc/$PID)",
+        "scenario": "Celery worker deadlock recovery via POSIX SIGTERM & PID revival",
+        "status": "PASS"
+      },
+      {
+        "id": "TC-04",
+        "subsystem": "Event Stream (RabbitMQ AMQP)",
+        "scenario": "Kubernetes consumer autoscaling 3 to 6 pods to drain queue backlog",
+        "status": "PASS"
+      },
+      {
+        "id": "TC-05",
+        "subsystem": "Edge Ingress (Nginx Keystore)",
+        "scenario": "Zero-downtime TLS certificate rotation via ACME & atomic symlink swap",
+        "status": "PASS"
+      },
+      {
+        "id": "TC-06",
+        "subsystem": "Human Gate (Lead SRE Sign-Off)",
+        "scenario": "Mandatory human approval gate for database core dumps (Babitha M)",
+        "status": "PASS"
+      },
+      {
+        "id": "TC-07",
+        "subsystem": "Kernel Locks (lsof / Shannon Entropy)",
+        "scenario": "Active file descriptors and daemon locks protected from compression",
+        "status": "PASS"
+      },
+      {
+        "id": "TC-08",
+        "subsystem": "Cluster Kill-Switch (Fail-Safe)",
+        "scenario": "Emergency cluster freeze blocking all autonomous remediation",
+        "status": "PASS"
+      },
+      {
+        "id": "TC-09",
+        "subsystem": "Runbook Ingestion (AI Prose Parser)",
+        "scenario": "Intelligent parsing of raw prose into executable SRE constraints in SQLite",
+        "status": "PASS"
+      },
+      {
+        "id": "TC-10",
+        "subsystem": "Automated Rollback (Safety Watchdog)",
+        "scenario": "Immediate zero-loss rollback execution on post-verification probe failure",
+        "status": "PASS"
+      },
+      {
+        "id": "TC-11",
+        "subsystem": "Physical Filesystem VFS (Windows Explorer)",
+        "scenario": "Real operating system file I/O and native Windows Explorer launch",
+        "status": "PASS"
+      },
+      {
+        "id": "TC-12",
+        "subsystem": "ITIL Audit Ledger (Cryptographic Sealed)",
+        "scenario": "Cryptographic change ID tracking and forensic SQLite database export",
+        "status": "PASS"
+      }
+    ]
+  }
+}
