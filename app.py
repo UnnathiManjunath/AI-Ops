@@ -2192,6 +2192,19 @@ def download_runbook_file():
         return send_file(file_path, as_attachment=True, download_name="MASTER_OPERATIONAL_RUNBOOK.md")
     return jsonify({"error": "Runbook file not found"}), 404
 
+@app.route("/api/download/documentation-pdf", methods=["GET"])
+def download_documentation_pdf():
+    """Download the Complete 8-Page System Documentation PDF directly."""
+    file_path = os.path.join(os.path.dirname(__file__), "SafeOps_AI_Complete_Documentation.pdf")
+    if os.path.exists(file_path):
+        return send_file(
+            file_path,
+            as_attachment=True,
+            download_name="SafeOps_AI_Complete_Documentation.pdf",
+            mimetype="application/pdf"
+        )
+    return jsonify({"error": "Documentation PDF not found"}), 404
+
 @app.route("/api/download/testcase-pdf", methods=["GET"])
 def download_testcase_pdf():
     """Download the System Testcase Specification PDF directly."""
