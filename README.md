@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SafeOps AI — Automation That Is Safe Enough to Leave Switched On
 
 **Hackathon Track:** Cynefian 24-Hour Student Hackathon — AI-Ops Track  
@@ -171,3 +172,7 @@ SafeOps AI comes with all 10 representative industry runbooks pre-configured (cl
 8. **RB-08:** Redis Cache Connection Pool Exhaustion (Idle Prune)
 9. **RB-09:** DNS Resolver Cache Poisoning & Stale Lookup Drift
 10. **RB-10:** API Ingress Gateway Packet Drop / SYN Flood Rate Limiting
+=======
+# AI-Ops
+IT teams manually resolve issues like full disks, stuck services, overloaded queues, and expired certificates, wasting time and risking human errors. Past automation failures have reduced trust in automated systems, creating a need for AI that detects faults, recommends safe fixes, assesses risks, and enables reliable automation.
+>>>>>>> 5ee187adfff2b30bdc2b9e69afe8b0222cc5c390
