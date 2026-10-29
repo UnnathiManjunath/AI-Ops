@@ -39,7 +39,7 @@ class NumberedCanvas(canvas.Canvas):
         # Footer
         footer_text = f"SafeOps AI System Verification Report • Team Idea Ignitors (XH-23) • GSSSIETW | Page {self._pageNumber} of {page_count}"
         self.drawString(36, 25, footer_text)
-        self.drawRightString(756, 25, "Live Demo: https://f9350825bebff0.lhr.life • GitHub: github.com/UnnathiManjunath/AI-Ops")
+        self.drawRightString(756, 25, "Live Demo: https://1cdc7d44931a84.lhr.life • GitHub: github.com/UnnathiManjunath/AI-Ops")
         self.restoreState()
 
 def build_pdf():
@@ -152,7 +152,7 @@ def build_pdf():
             Paragraph("<b>Team ID:</b> Idea Ignitors (XH-23)<br/><b>Institution:</b> GSSSIETW", meta_style),
             Paragraph("<b>Members:</b> Babitha M, M Eshwar,<br/>Unnathi T M, Chaithanya N S", meta_style),
             Paragraph("<b>Public GitHub Repository:</b><br/>github.com/UnnathiManjunath/AI-Ops", meta_bold),
-            Paragraph("<b>Live Demonstration URL:</b><br/>f9350825bebff0.lhr.life", meta_bold),
+            Paragraph("<b>Live Demonstration URL:</b><br/>1cdc7d44931a84.lhr.life", meta_bold),
             Paragraph("<b>Overall Test Status:</b><br/><b>12 / 12 PASS (100%)</b>", ParagraphStyle('StatusG', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=9, textColor=colors.HexColor('#16a34a')))
         ]
     ]

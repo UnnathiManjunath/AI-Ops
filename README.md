@@ -8,7 +8,7 @@
 **Domain:** AI Ops  
 
 ### 🔗 Project Links & Verification
-* 🌐 **Live Project URL Link:** [https://f9350825bebff0.lhr.life](https://f9350825bebff0.lhr.life) *(Backup Tunnel: [https://2c67340a233e58.lhr.life](https://2c67340a233e58.lhr.life))*
+* 🌐 **Live Project URL Link:** [https://1cdc7d44931a84.lhr.life](https://1cdc7d44931a84.lhr.life) *(Backup: [https://f9350825bebff0.lhr.life](https://f9350825bebff0.lhr.life) & Local: `http://127.0.0.1:5050`)*
 * 🐙 **GitHub Public Repository:** [https://github.com/UnnathiManjunath/AI-Ops](https://github.com/UnnathiManjunath/AI-Ops)
 * 🍴 **Host Account Fork Active:** [https://github.com/hackbridge-dev1/AI-Ops](https://github.com/hackbridge-dev1/AI-Ops)
 * 📄 **Testcase Specification PDF:** [Testcase.pdf](Testcase.pdf) *(Verified 12/12 Testcases: PASS)*
